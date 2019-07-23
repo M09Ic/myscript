@@ -29,7 +29,7 @@ def stamp2time(timestamp):
 
 
 # 获取token
-def get_tokenId(session, url="https://10.6.15.153/login"):
+def get_tokenId(session, url="https://ip/login"):
     r = session.get(url, verify=False)
     restr = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
     tokenId = re.findall(restr, r.text)[0]
@@ -38,7 +38,7 @@ def get_tokenId(session, url="https://10.6.15.153/login"):
 
 # 流量分析平台登录
 def login_liuliang(session):
-    url = "https://10.6.15.153/user/login"
+    url = "https://ip/user/login"
     tokenId = get_tokenId(session)
     username = "admin"
     pa = "*****"
@@ -49,8 +49,8 @@ def login_liuliang(session):
 
 # apt平台登录
 def login_apt(session):
-    url = "https://10.6.15.152/admin/j_spring_security_check"
-    tokenId = get_tokenId(session, "https://10.6.15.152/admin/login")
+    url = "https://ip/admin/j_spring_security_check"
+    tokenId = get_tokenId(session, "https://ip/admin/login")
     username = "admin"
     pa = "*****"
     data = {"j_username": username, "j_password": pa, "tokenId": tokenId}
@@ -121,7 +121,7 @@ def get_title(uname):
 # 安恒apt与全流量分析用的同一套接口,只是参数名字不同
 class getData:
     def __init__(self):
-        self.url = "https://10.6.15.152/events/queries"
+        self.url = "https://ip/events/queries"
         self.session = requests.session()
         # login_liuliang(self.session)
         login_apt(self.session)
@@ -165,7 +165,7 @@ class getData:
     def action_paginate(self, queryid, id, limit, start=0):
         param = {"action": "paginate", "format": "json", "queryid": queryid, "id": id, "token": self.tokenId}
         data = {"start": 0, "limit": limit}
-        r = self.session.post("https://10.6.15.152/events", params=param, data=data, timeout=100)
+        r = self.session.post("https://ip/events", params=param, data=data, timeout=100)
         rJson = r.json()
         if "update success" in rJson['desc']:
             # return rJson
@@ -421,14 +421,14 @@ def is_white(IP):
 class Taishi:
     # TODO
     def __init__(self):
-        self.url = "https://10.6.15.150"
-        self.user = "admin"
-        self.password = "3c0960162636e4b078fe72c58230fd782fa8249d"
+        self.url = "https://ip"
+        self.user = "******"
+        self.password = "**********************************"
         self.session = requests.session()
 
         # 登录
         url = self.url + '/api/login'
-        header = {'Referer':'https://10.6.15.150/index.html','Content-Type':'application/x-www-form-urlencoded'}
+        header = {'Referer':'https://ip/index.html','Content-Type':'application/x-www-form-urlencoded'}
         data = {'username':self.user,'password':self.password,}
         self.session.get(self.url + '/index.html',verify=False)
         self.session.post(url,data=data,headers=header, verify=False)
@@ -437,7 +437,7 @@ class Taishi:
     # 获取数据,成功则返回数据字典,失败返回{'data':0}
     def getlist(self,h):
         url = self.url + "/api/search/alarms/getList"
-        header = {"Content-Type": "application/json", "Referer": "https://10.6.15.150/index.html",
+        header = {"Content-Type": "application/json", "Referer": "https://ip/index.html",
                   "Accept-Language": "zh-CN,zh;q=0.9"}
         data = {"endTime": stamp2time(time.time()), "startTime": stamp2time(time.time()-60*60*h), "from": 0, "size": 9999, "searchTypeNum": 3,"userName": "admin"}
 
@@ -451,7 +451,7 @@ class Taishi:
 
     def getsize(self,h,ip):
         url =self.url +"/api/search/logs/total"
-        header = {"Content-Type": "application/json", "Referer": "https://10.6.15.150/index.html",
+        header = {"Content-Type": "application/json", "Referer": "https://ip/index.html",
                   "Accept-Language": "zh-CN,zh;q=0.9"}
         data = {"endTime":stamp2time(time.time()),"startTime":stamp2time(time.time()-60*60*h),"searchTypeNum":1,"indexJson":{"log":0,"flowaudit":1,"flowsession":0},"queryStr":"","extraUi":{"srcAddress":ip,"direction":"10"}}
 
@@ -462,7 +462,7 @@ class Taishi:
     def gethttp(self,h,ip):
         url = self.url + "/api/search/logs/getList"
 
-        header = {"Content-Type": "application/json", "Referer": "https://10.6.15.150/index.html",
+        header = {"Content-Type": "application/json", "Referer": "https://ip/index.html",
                   "Accept-Language": "zh-CN,zh;q=0.9"}
         # stamp2time(time.time()-60*h)
         print("[+] 最近%d小时%s共有%d条访问记录"%(h,ip,self.getsize(h,ip)))
